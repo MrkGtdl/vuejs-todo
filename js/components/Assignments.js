@@ -4,26 +4,23 @@ import AssignmentCreate from "./AssignmentCreate.js";
 export default {
     components:{AssignmentList,AssignmentCreate},
     template:`
-    <section class="space-y-6 mt-5">
-    <div class="row">
-       
-        <div class="column float-left w-1/2 p-2.5 h-80" style="background-color:#aaa;">
-        <h1 class="font-bold">In Progress</h1>
-            <assignment-list :assignments="filters.inProgress"></assignment-list>
-        </div>
+    <section class="space-y-6 mt-1">
+        <div class="row">
+        
+            <div class="column float-left w-1/2  h-80 text-black border-r border-gray-400 " style="background-color:white;">
+            <h1 class="font-bold p-2.5 bg-amber-400 text-white">In Progress</h1>
+                <assignment-list :assignments="filters.inProgress"></assignment-list>
+            </div>
 
-        <div class="column float-left w-1/2 p-2.5 h-80" style="background-color:#bbb;">
-        <h1 class="font-bold">Completed</h1>
-            <assignment-list :assignments="filters.completed"></assignment-list>
+            <div class="column float-left w-1/2 h-80 text-black" style="background-color:white;">
+            <h1 class="font-bold p-2.5  bg-amber-400 text-white">Completed</h1>
+                <assignment-list :assignments="filters.completed"></assignment-list>
+            </div>
         </div>
-    </div>
-    
-      
-
-        <assignment-create @add="add"></assignment-create>
     </section>
-
-
+    <div class="py-10">
+    <assignment-create @add="add"></assignment-create>
+    </div>
     `,
     data() {
         return{
