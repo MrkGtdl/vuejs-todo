@@ -5,8 +5,9 @@ export default {
         Assignment
     },
     template:`
+    <h2 class="font-bold mb-2">Total: {{ assignments.length }}</h2>
     <section v-show="assignments.length">
-        <h2 class="font-bold mb-2">{{title}} <span>({{ assignments.length }})</span></h2>
+        <h2 class="font-bold mb-2">{{title}} </h2>
 
         <div class="flex gap-2">
             <button @click="currentTag = tag" v-for="tag in tags" class="border rounded px-1 py-px text-xs " :class="{'border-bluee-500 text-blue-500' :tag ===currentTag}">{{tag}}</button>

@@ -4,9 +4,21 @@ import AssignmentCreate from "./AssignmentCreate.js";
 export default {
     components:{AssignmentList,AssignmentCreate},
     template:`
-    <section class="space-y-6">
-        <assignment-list :assignments="filters.inProgress" title="In Progress"></assignment-list>
-        <assignment-list :assignments="filters.completed" title="Completed"></assignment-list>
+    <section class="space-y-6 mt-5">
+    <div class="row">
+       
+        <div class="column float-left w-1/2 p-2.5 h-80" style="background-color:#aaa;">
+        <h1 class="font-bold">In Progress</h1>
+            <assignment-list :assignments="filters.inProgress"></assignment-list>
+        </div>
+
+        <div class="column float-left w-1/2 p-2.5 h-80" style="background-color:#bbb;">
+        <h1 class="font-bold">Completed</h1>
+            <assignment-list :assignments="filters.completed"></assignment-list>
+        </div>
+    </div>
+    
+      
 
         <assignment-create @add="add"></assignment-create>
     </section>
