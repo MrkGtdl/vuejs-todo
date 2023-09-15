@@ -4,8 +4,8 @@ import { ref, onMounted, computed, watch } from 'vue'
 const todos = ref([])
 const name = ref('')
 
-const input_content = ref('')
-const input_category = ref(null)
+const content = ref('')
+const category = ref(null)
 
 const todos_asc = computed(() => todos.value.sort((a,b) =>{
 	return a.createdAt - b.createdAt
@@ -22,13 +22,13 @@ watch(todos, (newVal) => {
 })
 
 const addTodo = () => {
-	if (input_content.value.trim() === '' || input_category.value === null) {
+	if (content.value.trim() === '' || category.value === null) {
 		return
 	}
 
 	todos.value.push({
-		content: input_content.value,
-		category: input_category.value,
+		content: content.value,
+		category: category.value,
 		done: false,
 		editable: false,
 		createdAt: new Date().getTime()
@@ -63,7 +63,7 @@ onMounted(() => {
 					name="content" 
 					id="content" 
 					placeholder="Task for today"
-					v-model="input_content" />
+					v-model="content" />
 				
 				<h4>Priority type</h4>
 				<div class="options">
@@ -74,7 +74,7 @@ onMounted(() => {
 							name="category" 
 							id="category1" 
 							value="business"
-							v-model="input_category" />
+							v-model="category" />
 						<span class="bubble business"></span>
 						<div>low</div>
 					</label>
@@ -85,7 +85,7 @@ onMounted(() => {
 							name="category" 
 							id="category2" 
 							value="personal"
-							v-model="input_category" />
+							v-model="category" />
 						<span class="bubble personal"></span>
 						<div>Medium</div>
 					</label>
@@ -96,7 +96,7 @@ onMounted(() => {
 							name="category" 
 							id="category3" 
 							value="high"
-							v-model="input_category" />
+							v-model="category" />
 						<span class="bubble high"></span>
 						<div>High</div>
 					</label>
