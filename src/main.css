@@ -39,7 +39,7 @@ body {
 section {
 	margin-top: 2rem;
 	margin-bottom: 2rem;
-	padding-left: 1.5rem;
+	padding-left: 16.5rem;
 	padding-right: 1.5em;
 }
 
@@ -160,13 +160,15 @@ input:checked ~ .bubble::after {
 }
 
 .create-todo{
-	width: 35%;
+	width: 25%;
 	display: flex;
     float: left;
 	background: lightgray;
 	border-radius: 10px;
 	padding: 0;
 	justify-content: space-evenly;
+	position: absolute;
+    left: 370px;
 }
 
 .create-todo .options label div {
@@ -194,11 +196,13 @@ input:checked ~ .bubble::after {
 }
 
 .todo-list{
-	width: 60%;
+	width: 40%;
 	float: right;
 	background: lightgray;
     padding: 10px;
 	border-radius: 10px;
+	position: absolute;
+    right: 250px;
 }
 
 .todo-list .list {

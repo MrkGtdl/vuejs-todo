@@ -54,7 +54,8 @@ onMounted(() => {
 			</h2>
 		</section>
 
-		<section class="create-todo">
+    <div>
+      <section class="create-todo">
 			<form id="new-todo-form" @submit.prevent="addTodo">
 				<h4>Create task</h4>
 				<input 
@@ -127,6 +128,8 @@ onMounted(() => {
 				</div>
 			</div>
 		</section>
+    </div>
+
 
 	</main>
 </template>
