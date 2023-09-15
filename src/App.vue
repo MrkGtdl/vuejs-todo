@@ -50,7 +50,7 @@ onMounted(() => {
 		
 		<section class="greeting">
 			<h2 class="title">
-				What's up, <input type="text" id="name" placeholder="Name here" v-model="name">
+				Good Day, <input type="text" id="name" placeholder="Name here" v-model="name">
 			</h2>
 		</section>
 
@@ -108,7 +108,7 @@ onMounted(() => {
 		</section>
 
 		<section class="todo-list">
-			<h3>TODO LIST</h3>
+			<h4>TODO LIST</h4>
 			<div class="list" id="todo-list">
 				<div v-for="todo in todos_asc" :class="`todo-item ${todo.done && 'done'}`">
 					<label>
@@ -122,7 +122,7 @@ onMounted(() => {
 					</div>
 
 					<div class="actions">
-						<button class="delete" @click="removeTodo(todo)">Delete</button>
+						<button class="delete" @click="removeTodo(todo)"><fa icon="trash"/></button>
 					</div>
 				</div>
 			</div>

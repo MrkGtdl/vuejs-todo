@@ -237,7 +237,7 @@ input:checked ~ .bubble::after {
 
 .todo-item .actions button {
 	display: block;
-	padding: 0.5rem;
+	padding:10px;
 	border-radius: 0.25rem;
 	color: #FFF;
 	cursor: pointer;
@@ -260,4 +260,8 @@ input:checked ~ .bubble::after {
 .todo-item.done .todo-content input {
 	text-decoration: line-through;
 	color: var(--grey);
+}
+
+#new-todo-form{
+	padding-bottom: 10px;
 }
