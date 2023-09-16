@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
+import { useDateFormat, useNow } from'@vueuse/core'
 
 const todos = ref([])
 const name = ref('')
@@ -43,12 +44,15 @@ onMounted(() => {
 	name.value = localStorage.getItem('name') || ''
 	todos.value = JSON.parse(localStorage.getItem('todos')) || []
 })
+
+const formattedDate = useDateFormat(useNow(),"dddd MMMM d YYYY hh:mm:ss");
 </script>
 
 <template>
 	<main class="app">
 		
 		<section class="greeting">
+			<span>{{ formattedDate }}</span>
 			<h2 class="title">
 				Good Day, <input type="text" id="name" placeholder="Name here" v-model="name">
 			</h2>
@@ -131,7 +135,7 @@ onMounted(() => {
     </div>
 
 	<div class="container">
-		
+
 	</div>
 
 	</main>
