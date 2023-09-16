@@ -160,15 +160,15 @@ input:checked ~ .bubble::after {
 }
 
 .create-todo{
-	width: 25%;
+	width: 30%;
 	display: flex;
     float: left;
 	background: lightgray;
 	border-radius: 10px;
 	padding: 0;
-	justify-content: space-evenly;
 	position: absolute;
-    left: 370px;
+    left: 150px;
+	top: 180px;
 }
 
 .create-todo .options label div {
@@ -203,6 +203,7 @@ input:checked ~ .bubble::after {
 	border-radius: 10px;
 	position: absolute;
     right: 250px;
+	top: 180px;
 }
 
 .todo-list .list {
