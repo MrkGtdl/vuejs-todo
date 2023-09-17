@@ -96,7 +96,7 @@ function onHashChange() {
   <section class="todoapp">
 	
     <header class="header">
-      <h1>TODO</h1>
+      <a href="#"><h1>TODO</h1></a>
 	  <font-awesome-icon :icon="['far', 'rectangle-list']" />
 	 <div class="time">
 		 <h3><strong>Time:  </strong>{{ formatted }}</h3>
