@@ -7,7 +7,7 @@ https://todomvc.com/
 import { ref, computed, watchEffect } from 'vue'
 import { useDateFormat, useNow } from '@vueuse/core';
 
-const formattedDate = useDateFormat(useNow(),"hh:mm:ss");
+const formattedDate = useDateFormat(useNow(),"hh:mm A");
 
 
 const STORAGE_KEY = 'vue-todomvc'
