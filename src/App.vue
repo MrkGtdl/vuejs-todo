@@ -1,142 +1,196 @@
+<!--
+A fully spec-compliant TodoMVC implementation
+https://todomvc.com/
+-->
+
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue'
-import { useDateFormat, useNow } from'@vueuse/core'
+import { ref, computed, watchEffect } from 'vue'
+import { useDateFormat, useNow } from '@vueuse/core';
 
-const todos = ref([])
-const name = ref('')
+const formattedDate = useDateFormat(useNow(),"hh:mm:ss");
 
-const content = ref('')
-const category = ref(null)
 
-const todos_asc = computed(() => todos.value.sort((a,b) =>{
-	return a.createdAt - b.createdAt
-}))
+const STORAGE_KEY = 'vue-todomvc'
 
-watch(name, (newVal) => {
-	localStorage.setItem('name', newVal)
-})
-
-watch(todos, (newVal) => {
-	localStorage.setItem('todos', JSON.stringify(newVal))
-}, {
-	deep: true
-})
-
-const addTodo = () => {
-	if (content.value.trim() === '' || category.value === null) {
-		return
-	}
-
-	todos.value.push({
-		content: content.value,
-		category: category.value,
-		done: false,
-		editable: false,
-		createdAt: new Date().getTime()
-	})
+const filters = {
+  all: (todos) => todos,
+  active: (todos) => todos.filter((todo) => !todo.completed),
+  completed: (todos) => todos.filter((todo) => todo.completed)
 }
 
-const removeTodo = (todo) => {
-	todos.value = todos.value.filter((t) => t !== todo)
-}
+// state
+const todos = ref(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'))
+const visibility = ref('all')
+const editedTodo = ref()
 
-onMounted(() => {
-	name.value = localStorage.getItem('name') || ''
-	todos.value = JSON.parse(localStorage.getItem('todos')) || []
+// derived state
+const filteredTodos = computed(() => filters[visibility.value](todos.value))
+const remaining = computed(() => filters.active(todos.value).length)
+
+// handle routing
+window.addEventListener('hashchange', onHashChange)
+onHashChange()
+
+// persist state
+watchEffect(() => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(todos.value))
 })
 
-const formattedDate = useDateFormat(useNow(),"dddd MMMM d YYYY hh:mm:ss");
+function toggleAll(e) {
+  todos.value.forEach((todo) => (todo.completed = e.target.checked))
+}
+
+function addTodo(e) {
+  const value = e.target.value.trim()
+  if (value) {
+    todos.value.push({
+      id: Date.now(),
+      title: value,
+	  time: formattedDate.value,
+      completed: false
+    })
+    e.target.value = ''
+  }
+}
+
+function removeTodo(todo) {
+  todos.value.splice(todos.value.indexOf(todo), 1)
+}
+
+let beforeEditCache = ''
+function editTodo(todo) {
+  beforeEditCache = todo.title
+  editedTodo.value = todo
+}
+
+function cancelEdit(todo) {
+  editedTodo.value = null
+  todo.title = beforeEditCache
+}
+
+function doneEdit(todo) {
+  if (editedTodo.value) {
+    editedTodo.value = null
+    todo.title = todo.title.trim()
+    if (!todo.title) removeTodo(todo)
+  }
+}
+
+function removeCompleted() {
+  todos.value = filters.active(todos.value)
+}
+
+function onHashChange() {
+  const route = window.location.hash.replace(/#\/?/, '')
+  if (filters[route]) {
+    visibility.value = route
+  } else {
+    window.location.hash = ''
+    visibility.value = 'all'
+  }
+}
 </script>
 
 <template>
-	<main class="app">
-		
-		<section class="greeting">
-			<span>{{ formattedDate }}</span>
-			<h2 class="title">
-				Good Day, <input type="text" id="name" placeholder="Name here" v-model="name">
-			</h2>
-		</section>
+  <section class="todoapp">
+    <header class="header">
+      <h1>TODO</h1>
+      <input
+        class="new-todo"
+        autofocus
+        placeholder="Task for today..."
+        @keyup.enter="addTodo"
+      >
+    </header>
 
-    <div>
-      <section class="create-todo">
-			<form id="new-todo-form" @submit.prevent="addTodo">
-				<h4>Create task</h4>
-				<input 
-					type="text" 
-					name="content" 
-					id="content" 
-					placeholder="Task for today"
-					v-model="content" />
-				
-				<h4>Priority type</h4>
-				<div class="options">
+    <section class="section" v-show="todos.length">
+      <span class="todo-count">
+        <strong>Total:{{ remaining }}</strong>
+        <!-- <span>{{ remaining === 1 ? ' item' : ' items' }} left</span> -->
+      </span>
+      <ul class="filters">
+        <li>
+          <a href="#/all" :class="{ selected: visibility === 'all' }">All</a>
+        </li>
+        <li>
+          <a href="#/active" :class="{ selected: visibility === 'active' }">Active</a>
+        </li>
+        <li>
+          <a href="#/completed" :class="{ selected: visibility === 'completed' }">Completed</a>
+        </li>
+      </ul>
+      <button class="clear-completed" @click="removeCompleted" v-show="todos.length > remaining">
+        Clear completed
+      </button>
+    </section>
 
-					<label>
-						<input 
-							type="radio" 
-							name="category" 
-							id="category1" 
-							value="business"
-							v-model="category" />
-						<span class="bubble business"></span>
-						<div>low</div>
-					</label>
+    <!-- <section class="main" v-show="todos.length">
+      <input
+        id="toggle-all"
+        class="toggle-all"
+        type="checkbox"
+        :checked="remaining === 0"
+        @change="toggleAll"
+      >
+      <label for="toggle-all">Mark all as complete</label>
+      <ul class="todo-list">
+        <li
+          v-for="todo in filteredTodos"
+          class="todo"
+          :key="todo.id"
+          :class="{ completed: todo.completed, editing: todo === editedTodo }"
+        >
+          <div class="view">
+            <input class="toggle" type="checkbox" v-model="todo.completed">
+            <label @dblclick="editTodo(todo)">{{ todo.title }} - {{ todo.time }}</label>
+            <button class="destroy" @click="removeTodo(todo)"></button>
+          </div>
+          <input
+            v-if="todo === editedTodo"
+            class="edit"
+            type="text"
+            v-model="todo.title"
+            @vue:mounted="({ el }) => el.focus()"
+            @blur="doneEdit(todo)"
+            @keyup.enter="doneEdit(todo)"
+            @keyup.escape="cancelEdit(todo)"
+          >
+        </li>
+      </ul>
+    </section> -->
 
-					<label>
-						<input 
-							type="radio" 
-							name="category" 
-							id="category2" 
-							value="personal"
-							v-model="category" />
-						<span class="bubble personal"></span>
-						<div>Medium</div>
-					</label>
+	<section class="main" v-show="todos.length">
+		<input
+        id="toggle-all"
+        class="toggle-all"
+        type="checkbox"
+        :checked="remaining === 0"
+        @change="toggleAll"
+      >
+      <label for="toggle-all">Mark all as complete</label>
+		<table>
+			<tr>
+				<th></th>
+				<th>Task</th>
+				<th>Time started</th>
+				<th>Action</th>
+			</tr>
+			<tr
+			v-for="todo in filteredTodos"
+          	class="todo"
+          	:key="todo.id"
+          	:class="{ completed: todo.completed, editing: todo === editedTodo }"
+			>
+				<td><input class="toggle" type="checkbox" v-model="todo.completed"></td>
+				<td>{{ todo.title }}</td>
+				<td>{{ todo.time }}</td>
+				<td><button class="destroy" @click="removeTodo(todo)">x</button></td>
+			</tr>
+		</table>
+	</section>
 
-          <label>
-						<input 
-							type="radio" 
-							name="category" 
-							id="category3" 
-							value="high"
-							v-model="category" />
-						<span class="bubble high"></span>
-						<div>High</div>
-					</label>
-          
 
-				</div>
 
-				<input type="submit" value="Add todo" />
-			</form>
-		</section>
-
-		<section class="todo-list">
-			<h4>TODO LIST</h4>
-			<div class="list" id="todo-list">
-				<div v-for="todo in todos_asc" :class="`todo-item ${todo.done && 'done'}`">
-					<label>
-						<input type="checkbox" v-model="todo.done" />
-						<span :class="`bubble ${
-							todo.category == 'business' ? 'business' : ((todo.category == 'personal') ? 'personal' : 'high')
-						}`"></span>
-					</label>
-					<div class="todo-content">
-						<input type="text" v-model="todo.content" />
-					</div>
-
-					<div class="actions">
-						<button class="delete" @click="removeTodo(todo)"><fa icon="trash"/></button>
-					</div>
-				</div>
-			</div>
-		</section>
-    </div>
-
-	<div class="container">
-
-	</div>
-
-	</main>
+  </section>
 </template>
+
