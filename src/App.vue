@@ -8,6 +8,7 @@ import { ref, computed, watchEffect } from 'vue'
 import { useDateFormat, useNow } from '@vueuse/core';
 
 const formattedDate = useDateFormat(useNow(),"hh:mm A");
+const formatted = useDateFormat(useNow(), 'hh:mm:ss A')
 
 
 const STORAGE_KEY = 'vue-todomvc'
@@ -93,8 +94,13 @@ function onHashChange() {
 
 <template>
   <section class="todoapp">
+	
     <header class="header">
       <h1>TODO</h1>
+	  <font-awesome-icon :icon="['far', 'rectangle-list']" />
+	 <div class="time">
+		 <h3><strong>Time:  </strong>{{ formatted }}</h3>
+	 </div>
       <input
         class="new-todo"
         autofocus
@@ -113,10 +119,10 @@ function onHashChange() {
           <a href="#/all" :class="{ selected: visibility === 'all' }">All</a>
         </li>
         <li>
-          <a href="#/active" :class="{ selected: visibility === 'active' }">Active</a>
+          <a href="#/active" :class="{ selected: visibility === 'active' }">In Progress</a>
         </li>
         <li>
-          <a href="#/completed" :class="{ selected: visibility === 'completed' }">Completed</a>
+          <a href="#/completed" :class="{ selected: visibility === 'completed' }">Done</a>
         </li>
       </ul>
       <button class="clear-completed" @click="removeCompleted" v-show="todos.length > remaining">
@@ -184,7 +190,7 @@ function onHashChange() {
 				<td><input class="toggle" type="checkbox" v-model="todo.completed"></td>
 				<td>{{ todo.title }}</td>
 				<td>{{ todo.time }}</td>
-				<td><button class="destroy" @click="removeTodo(todo)">x</button></td>
+				<td><button class="destroy" @click="removeTodo(todo)"><font-awesome-icon :icon="['fas', 'trash']" style="color: #ae1e2c;" /></button></td>
 			</tr>
 		</table>
 	</section>

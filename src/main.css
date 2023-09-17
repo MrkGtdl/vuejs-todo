@@ -3,7 +3,7 @@ body {
 	margin: 0;
 	padding: 0;
 
-	padding-top: 100px
+	padding-top: 50px
 
 }
 
@@ -399,13 +399,22 @@ h1 {
 	display: flex;
 }
 
+h3 {
+	font-weight: 100;;
+}
+
+th {
+	background: #FFCC00;
+}
+
 th, td {
 	border: 1px solid white;
-	padding: 1px;
+	padding: 10px;
 }
 
 thead th {
 	width: 25%;
+	
   }
 
   table {
@@ -413,4 +422,10 @@ thead th {
 	border-collapse: collapse;
 	text-align: center;
 	vertical-align: middle;
+}
+
+.time {
+    display: flex;
+    justify-content: end;
+	padding-right: 10px;
 }
