@@ -96,11 +96,14 @@ function onHashChange() {
   <section class="todoapp">
 	
     <header class="header">
-      <a href="#"><h1>TODO</h1></a>
-	  <font-awesome-icon :icon="['far', 'rectangle-list']" />
-	 <div class="time">
-		 <h3><strong>Time:  </strong>{{ formatted }}</h3>
-	 </div>
+        <!-- <font-awesome-icon :icon="['far', 'rectangle-list']" /> -->
+      <div class="time">
+        <a href="#" class="headerTitle"><span>TODO</span></a>
+          <!-- <a href="#"><h1>TODO</h1></a> -->
+          <h3><strong>Time:  </strong>{{ formatted }}</h3>
+        
+      </div>
+
       <input
         class="new-todo"
         autofocus
