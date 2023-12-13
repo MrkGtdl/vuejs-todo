@@ -10,9 +10,9 @@ RUN npm install
 
 COPY . .
 
-ENV PORT=101341
+ENV PORT=12809
 
-EXPOSE 101341
+EXPOSE 12809
 
 RUN npm run build
 
